@@ -5,7 +5,12 @@ const port = 8000
 
 app.get('/', (req, res, next) =>
 {
- res.status(200).send('<h1>hello from express js</h1>')
+ res.status(200).send('<h1>you try to get from express server</h1>')
+})
+
+app.post('/', (req, res, next) =>
+{
+ res.status(200).send('<h1>you try to post to express server</h1>')
 })
 
 
