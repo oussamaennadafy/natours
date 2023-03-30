@@ -21,23 +21,33 @@ app.get('/api/v1/tours', (req, res) =>
  })
 })
 
+app.get('/api/v1/tours/:id', (req, res) =>
+{
+ const { id } = req.params
+ const tour = tours.filter(tour => tour.id === id)
+ res.json({
+  status: "success",
+  results: tours.length,
+  data: {
+   tour
+  }
+ })
+})
+
 app.post('/api/v1/tours', (req, res) =>
 {
  const item = req.body
- fs.readFile(`${__dirname}/dev-data/data/tours-simple.json`, 'utf-8', (err, data) =>
+ // if (err) return res.status(400).json({ error: "something went wrong" })
+ const dataObj = JSON.parse(tours)
+ dataObj.push(item)
+ const newTour = JSON.stringify(dataObj)
+ fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, newTour, () =>
  {
-  if (err) return res.status(400).json({ error: "something went wrong" })
-  const dataObj = JSON.parse(data)
-  dataObj.push(item)
-  const newTour = JSON.stringify(dataObj)
-  fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, newTour, () =>
-  {
-   res.status(201).json({
-    status: "success",
-    data: {
-     tour: newTour
-    }
-   })
+  res.status(201).json({
+   status: "success",
+   data: {
+    tour: newTour
+   }
   })
  })
 })
