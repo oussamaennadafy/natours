@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express()
 const port = 8000
-const usersRouter = require('./routes/users')
-const toursRouter = require('./routes/tours')
+const usersRouter = require('./routes/userRoutes')
+const toursRouter = require('./routes/tourRoutes')
 
 // parse the body 
 app.use(express.json());

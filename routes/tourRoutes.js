@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const { getAllTours, addTour, getOneTour, updateTour, deleteTour } = require('./../controllers/tours')
+const { getAllTours, addTour, getOneTour, updateTour, deleteTour } = require('../controllers/toursController')
 
 
 router.route('/')
