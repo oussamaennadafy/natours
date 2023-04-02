@@ -1,14 +1,21 @@
 const express = require('express');
 const app = express()
 const port = 8000
-const usersRoutes = require('./routes/users')
-const toursRoutes = require('./routes/tours')
+const usersRouter = require('./routes/users')
+const toursRouter = require('./routes/tours')
 
 // parse the body 
 app.use(express.json());
 
-app.use('/api/v1/users', usersRoutes)
-app.use('/api/v1/tours', toursRoutes)
+const users = [
+  {
+    name: "oussama",
+    age: 20
+  }
+]
+
+app.use('/api/v1/users', usersRouter)
+app.use('/api/v1/tours', toursRouter)
 
 app.listen(port, () =>
 {

@@ -1,15 +1,15 @@
 const express = require('express')
 const router = express.Router()
 
-const { getTour, getTours, addTour, updateTour, deleteTour } = require('./../controller/tours')
+const { getAllTours, addTour, getOneTour, updateTour, deleteTour } = require('./../controllers/tours')
 
 
-router.route('/api/v1/tours')
- .get(getTours)
+router.route('/')
+ .get(getAllTours)
  .post(addTour)
 
-router.route('/api/v1/tours/:id')
- .get(getTour)
+router.route('/:id')
+ .get(getOneTour)
  .patch(updateTour)
  .delete(deleteTour)
 
