@@ -1,9 +1,24 @@
-const getAllUsers = (req, res) =>
+const Tour = require('./../../models/toursModel')
+
+const updateTour = async (req, res) =>
 {
- res.json({
-  status: "success",
-  data: "not available"
- })
+ try {
+  const updatedTour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+   new: true,
+   runValidators: false,
+  })
+  res.status(200).json({
+   status: "success",
+   data: {
+    updatedTour
+   }
+  })
+ } catch (err) {
+  res.status(404).json({
+   status: "fail",
+   reason: err
+  })
+ }
 };
 
-module.exports = getAllUsers
+module.exports = updateTour
