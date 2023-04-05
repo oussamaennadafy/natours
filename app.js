@@ -1,9 +1,11 @@
 const express = require('express');
-const app = express()
-const usersRouter = require('./routes/userRoutes')
-const toursRouter = require('./routes/tourRoutes')
+const app = express();
+const cors = require('cors');
+const usersRouter = require('./routes/userRoutes');
+const toursRouter = require('./routes/tourRoutes');
 
 
+app.use(cors())
 // parse the body
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`))
