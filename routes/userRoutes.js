@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const { getAllUsers, addUser, getOneUser, updateUser, deleteUser } = require('../controllers/usersController')
+const { getAllUsers, createUser, getOneUser, updateUser, deleteUser } = require('../controllers/usersController')
 
 // router.param('id', (req, res, next, val) =>
 // {
@@ -11,7 +11,7 @@ const { getAllUsers, addUser, getOneUser, updateUser, deleteUser } = require('..
 
 router.route('/')
  .get(getAllUsers)
- .post(addUser)
+ .post(createUser)
 
 router.route('/:id')
  .get(getOneUser)

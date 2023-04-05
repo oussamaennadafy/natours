@@ -1,6 +1,6 @@
 const getAllUsers = require('./getAllUsers');
 const getOneUser = require('./getOneUser');
-const addUser = require('./addUser');
+const createUser = require('./createUser');
 const updateUser = require('./updateUser');
 const deleteUser = require('./deleteUser');
 
@@ -8,7 +8,7 @@ const deleteUser = require('./deleteUser');
 module.exports = {
  getAllUsers,
  getOneUser,
- addUser,
+ createUser,
  updateUser,
  deleteUser
 }
