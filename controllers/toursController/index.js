@@ -1,6 +1,6 @@
 const getAllTours = require('./getAllTours');
 const getOneTour = require('./getOneTour');
-const addTour = require('./addTour');
+const createTour = require('./createTour');
 const updateTour = require('./updateTour');
 const deleteTour = require('./deleteTour');
 
@@ -8,7 +8,7 @@ const deleteTour = require('./deleteTour');
 module.exports = {
  getAllTours,
  getOneTour,
- addTour,
+ createTour,
  updateTour,
  deleteTour
 }

@@ -4,7 +4,7 @@ const usersRouter = require('./routes/userRoutes')
 const toursRouter = require('./routes/tourRoutes')
 
 
-// parse the body 
+// parse the body
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`))
 
