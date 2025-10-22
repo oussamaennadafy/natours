@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
+  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`),
 );
 
 const checkTourBody = (req, res, next) => {
@@ -50,7 +50,7 @@ const createTour = async (req, res) => {
   };
   await fs.promises.writeFile(
     `${__dirname}/../dev-data/data/tours-simple.json`,
-    JSON.stringify([...tours, newTour])
+    JSON.stringify([...tours, newTour]),
   );
   res.status(201).json({
     status: 'success',
@@ -81,7 +81,7 @@ const updateTour = async (req, res) => {
   });
   await fs.promises.writeFile(
     `${__dirname}/../dev-data/data/tours-simple.json`,
-    JSON.stringify(updatedTours)
+    JSON.stringify(updatedTours),
   );
   res.status(200).json({
     status: 'success',
@@ -96,7 +96,7 @@ const deleteTour = async (req, res) => {
   const updatedTours = tours.filter((el) => el.id !== Number(id));
   await fs.promises.writeFile(
     `${__dirname}/../dev-data/data/tours-simple.json`,
-    JSON.stringify(updatedTours)
+    JSON.stringify(updatedTours),
   );
   res.status(204).json({
     status: 'success',

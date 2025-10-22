@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "natours api for natours app",
   "main": "server.js",
+  "engines": {
+    "node": ">=11.14.0"
+  },
   "scripts": {
     "start:dev": "NODE_ENV=development nodemon server.js",
     "start:prod": "NODE_ENV=production nodemon server.js"
