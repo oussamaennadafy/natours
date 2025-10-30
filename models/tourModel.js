@@ -50,12 +50,13 @@ const tourseSchema = new mongoose.Schema(
           // this only point on current doc on NEW document creation
           return val < this.price;
         },
-        message: "Pricediscount ({VALUE}) should be less than the trip price",
+        message: "price discount ({VALUE}) should be less than the trip price",
       },
     },
     Summary: {
       type: String,
       trim: true,
+      unique: true,
     },
     description: {
       type: String,
