@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
 
-const tourseSchema = new mongoose.Schema(
+const toursSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -25,7 +25,7 @@ const tourseSchema = new mongoose.Schema(
       type: String,
       required: [true, "a tour must have a difficulty"],
       enum: {
-        values: ["easy", "medium", "difficult"],
+        values: ["easy", "medium", "hard", "difficult"],
         message: "difficulty is either easy, medium, or difficult",
       },
     },
@@ -84,34 +84,34 @@ const tourseSchema = new mongoose.Schema(
 );
 
 // VIRTUAL PROPERTY MIDDLEWARE - to define durationWeeks property
-tourseSchema.virtual("durationWeeks").get(function () {
+toursSchema.virtual("durationWeeks").get(function () {
   return this.duration / 7;
 });
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
-tourseSchema.pre("save", function (next) {
+toursSchema.pre("save", function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
 
 // QUERY MIDDLEWARE
-tourseSchema.pre(/^find/, function (next) {
+toursSchema.pre(/^find/, function (next) {
   this.find({ secretTour: { $ne: true } });
   this.start = Date.now();
   next();
 });
 
-tourseSchema.post(/^find/, function (docs, next) {
+toursSchema.post(/^find/, function (docs, next) {
   console.log(`query took ${Date.now() - this.start}ms`);
-  console.log(docs);
+  // console.log(docs);
   next();
 });
 
-tourseSchema.pre("aggregate", function (next) {
+toursSchema.pre("aggregate", function (next) {
   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
   next();
 });
 
-const Tour = mongoose.model("tours", tourseSchema);
+const Tour = mongoose.model("tours", toursSchema);
 
 module.exports = Tour;

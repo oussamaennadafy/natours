@@ -1,44 +1,18 @@
-const express = require('express');
+const User = require("../models/userModel");
+const catchAsync = require("../utils/catchAsync");
 
-const getAllUsers = (req, res) => {
-  res.status(500).json({
-    sttaus: 'error',
-    message: 'route unimplemented',
-  });
-};
+const getAllUsers = catchAsync(async (req, res, next) => {
+  const users = await User.find();
 
-const getSingleUser = (req, res) => {
-  res.status(500).json({
-    sttaus: 'error',
-    message: 'route unimplemented',
+  res.status(200).json({
+    status: "success",
+    results: users.length,
+    data: {
+      users: users,
+    },
   });
-};
-
-const createUser = (req, res) => {
-  res.status(500).json({
-    sttaus: 'error',
-    message: 'route unimplemented',
-  });
-};
-
-const updateUser = (req, res) => {
-  res.status(500).json({
-    sttaus: 'error',
-    message: 'route unimplemented',
-  });
-};
-
-const deleteUser = (req, res) => {
-  res.status(500).json({
-    sttaus: 'error',
-    message: 'route unimplemented',
-  });
-};
+});
 
 module.exports = {
   getAllUsers,
-  getSingleUser,
-  updateUser,
-  createUser,
-  deleteUser,
 };
