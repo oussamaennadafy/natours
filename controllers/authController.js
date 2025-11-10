@@ -1,4 +1,6 @@
 const { promisify } = require("util");
+const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
@@ -128,7 +130,57 @@ const forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
-const resetPassword = catchAsync(async (req, res, next) => {});
+const resetPassword = catchAsync(async (req, res, next) => {
+  // 1 - get the user by the token
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return next(new AppError("token is invalid, or has expired", 400));
+  }
+  // 2 - set the new password only if token not expired and user exist
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  await user.save();
+  // 3 - update the changedPassworedAt property in the durrent user
+  // 4 - send the JWT to the client
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    status: "success",
+    token,
+  });
+});
+
+const updatePassword = catchAsync(async (req, res, next) => {
+  // 1 - get user from collection
+  const currentUser = await User.findById(req.user.id).select("+password");
+  // 2 - check if posted current password is correct
+  const matched = await bcrypt.compare(
+    req.body.currentPassword,
+    currentUser.password,
+  );
+  // 3 - if so update password
+  if (!matched) {
+    return next(new AppError("current password is incorect!", 400));
+  }
+  if (req.body.newPassword !== req.body.newPasswordConfirm) {
+    return next(
+      new AppError("new password and confirm password is not matching!", 400),
+    );
+  }
+
+  // 4 - log user in qnd send jwt
+});
 
 module.exports = {
   signup,
@@ -137,4 +189,5 @@ module.exports = {
   restrictTo,
   forgotPassword,
   resetPassword,
+  updatePassword,
 };
