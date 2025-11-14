@@ -3,11 +3,10 @@ const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
 const filterObj = (obj, fileds) => {
-  let result;
+  const result = {};
   fileds.forEach((element) => {
     result[element] = obj[element];
   });
-
   return result;
 };
 
