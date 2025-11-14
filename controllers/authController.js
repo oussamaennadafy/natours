@@ -1,6 +1,5 @@
 const { promisify } = require("util");
 const crypto = require("crypto");
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
@@ -11,6 +10,18 @@ const signToken = (id) =>
   jwt.sign({ id: id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
+
+const createAndSendRoken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+
+  res.status(statusCode).json({
+    sttaus: "success",
+    token,
+    data: {
+      user,
+    },
+  });
+};
 
 const signup = catchAsync(async (req, res, next) => {
   const { name, email, photo, password, passwordConfirm, passwordChangedAt } =
@@ -25,15 +36,7 @@ const signup = catchAsync(async (req, res, next) => {
     passwordChangedAt,
   });
 
-  const token = signToken(newUser._id);
-
-  res.status(200).json({
-    sttaus: "success",
-    token,
-    data: {
-      user: newUser,
-    },
-  });
+  createAndSendRoken(newUser, 201, res);
 });
 
 const login = catchAsync(async (req, res, next) => {
@@ -51,12 +54,7 @@ const login = catchAsync(async (req, res, next) => {
     return next(new AppError("Incorect email or password"), 401);
 
   // generate token
-  const token = signToken(user._id);
-
-  res.status(200).json({
-    status: "success",
-    token,
-  });
+  createAndSendRoken(user, 200, res);
 });
 
 const protect = catchAsync(async (req, res, next) => {
@@ -153,33 +151,28 @@ const resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
   // 3 - update the changedPassworedAt property in the durrent user
   // 4 - send the JWT to the client
-  const token = signToken(user._id);
-
-  res.status(200).json({
-    status: "success",
-    token,
-  });
+  createAndSendRoken(user, 200, res);
 });
 
 const updatePassword = catchAsync(async (req, res, next) => {
   // 1 - get user from collection
   const currentUser = await User.findById(req.user.id).select("+password");
   // 2 - check if posted current password is correct
-  const matched = await bcrypt.compare(
-    req.body.currentPassword,
+  const isPasswordCorrect = await currentUser.correctPassword(
+    req.body.passwordCurrent,
     currentUser.password,
   );
+
+  if (!isPasswordCorrect) {
+    return next(new AppError("your current password is wrong", 401));
+  }
   // 3 - if so update password
-  if (!matched) {
-    return next(new AppError("current password is incorect!", 400));
-  }
-  if (req.body.newPassword !== req.body.newPasswordConfirm) {
-    return next(
-      new AppError("new password and confirm password is not matching!", 400),
-    );
-  }
+  currentUser.password = req.body.password;
+  currentUser.passwordConfirm = req.body.passwordConfirm;
+  await currentUser.save();
 
   // 4 - log user in qnd send jwt
+  createAndSendRoken(currentUser, 200, res);
 });
 
 module.exports = {
