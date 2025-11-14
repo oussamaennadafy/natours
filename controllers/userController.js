@@ -1,5 +1,15 @@
+const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
+
+const filterObj = (obj, fileds) => {
+  let result;
+  fileds.forEach((element) => {
+    result[element] = obj[element];
+  });
+
+  return result;
+};
 
 const updateMe = catchAsync(async (req, res, next) => {
   // 1 - throw error if the user posted a password
@@ -11,9 +21,19 @@ const updateMe = catchAsync(async (req, res, next) => {
       ),
     );
   }
-  // 2 - update user document
+
+  // 2 - filter request body object
+  const filteredObj = filterObj(req.body, ["name", "email"]);
+
+  // 3 - update user document
+  const updateUser = await User.findByIdAndUpdate(req.user.id, filteredObj, {
+    new: true,
+    runValidators: true,
+  });
+
   res.status(200).json({
     sttaus: "success",
+    user: updateUser,
   });
 });
 
