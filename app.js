@@ -20,7 +20,7 @@ const limiter = rateLimit({
   message: "too many requests from this ip, please try again in an hour!",
 });
 
-app.use("/api/*", limiter);
+app.use("/api", limiter);
 app.use(express.json());
 app.use(express.static(`/${__dirname}/public`));
 
