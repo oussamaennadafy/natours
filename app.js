@@ -10,7 +10,7 @@ const globalErrorHandler = require("./controllers/errorController");
 
 const app = express();
 
-// 1 - MIDDLEWARE middleware
+// 1 - MIDDLEWARE
 
 // set security http headers
 app.use(helmet());

@@ -104,7 +104,9 @@ const protect = catchAsync(async (req, res, next) => {
 const restrictTo = (...roles) =>
   catchAsync(async (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return next("your not authorize to perform this action", 403);
+      return next(
+        new AppError("your not authorize to perform this action", 403),
+      );
     }
     next();
   });

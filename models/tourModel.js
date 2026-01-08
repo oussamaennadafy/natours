@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
+// const User = require("./userModel");
 
 const toursSchema = new mongoose.Schema(
   {
@@ -34,6 +35,7 @@ const toursSchema = new mongoose.Schema(
       default: 4.5,
       min: [1, "the rating must be above 1"],
       max: [5, "the rating must be below 5"],
+      set: (val) => Math.round(val * 10) / 10,
     },
     ratingsQuantity: {
       type: Number,
@@ -76,6 +78,34 @@ const toursSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    startLocation: {
+      type: {
+        type: String,
+        default: "Point",
+        enum: ["Point"],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: "Point",
+          enum: ["Point"],
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+      },
+    ],
+    guids: [
+      {
+        type: "ObjectId",
+        ref: "User",
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
@@ -83,9 +113,20 @@ const toursSchema = new mongoose.Schema(
   },
 );
 
+// toursSchema.index({ price: 1 });
+toursSchema.index({ price: 1, ratingsAverage: -1 });
+
+toursSchema.index({ slug: 1 });
+
 // VIRTUAL PROPERTY MIDDLEWARE - to define durationWeeks property
 toursSchema.virtual("durationWeeks").get(function () {
   return this.duration / 7;
+});
+
+toursSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "tour",
+  localField: "_id",
 });
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
@@ -94,10 +135,25 @@ toursSchema.pre("save", function (next) {
   next();
 });
 
+// toursSchema.pre("save", async function (next) {
+//   const guidsPromises = this.guids.map(async (guidID) => User.findById(guidID));
+//   const guidsDocs = await Promise.all(guidsPromises);
+//   this.guids = guidsDocs;
+//   next();
+// });
+
 // QUERY MIDDLEWARE
 toursSchema.pre(/^find/, function (next) {
   this.find({ secretTour: { $ne: true } });
   this.start = Date.now();
+  next();
+});
+
+toursSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "guids",
+    select: "-__v -passwordChangedAt",
+  });
   next();
 });
 
@@ -112,6 +168,6 @@ toursSchema.pre("aggregate", function (next) {
   next();
 });
 
-const Tour = mongoose.model("tours", toursSchema);
+const Tour = mongoose.model("Tour", toursSchema);
 
 module.exports = Tour;
