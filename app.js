@@ -34,11 +34,22 @@ app.use("/api", limiter);
 // body parser, read data from body into req.body
 app.use(express.json({ limit: "10kb" }));
 
-// data sanitization against NoSQL query injections
-app.use(mongoSanitize());
+// fix middleware for xss and mongoSanitize middlewares in express 5
+app.use((req, _res, next) => {
+  Object.defineProperty(req, "query", {
+    ...Object.getOwnPropertyDescriptor(req, "query"),
+    value: req.query,
+    writable: true,
+  });
+
+  next();
+});
 
 // data sanitization against XSS
 app.use(xss());
+
+// data sanitization against NoSQL query injections
+app.use(mongoSanitize());
 
 // prevent parametre pollution
 app.use(
