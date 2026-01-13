@@ -118,6 +118,8 @@ toursSchema.index({ price: 1, ratingsAverage: -1 });
 
 toursSchema.index({ slug: 1 });
 
+toursSchema.index({ startLocation: "2dsphere" });
+
 // VIRTUAL PROPERTY MIDDLEWARE - to define durationWeeks property
 toursSchema.virtual("durationWeeks").get(function () {
   return this.duration / 7;
@@ -163,10 +165,10 @@ toursSchema.post(/^find/, function (docs, next) {
   next();
 });
 
-toursSchema.pre("aggregate", function (next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-  next();
-});
+// toursSchema.pre("aggregate", function (next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+//   next();
+// });
 
 const Tour = mongoose.model("Tour", toursSchema);
 
