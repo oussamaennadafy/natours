@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
@@ -8,12 +9,19 @@ const hpp = require("hpp");
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
 const authRouter = require("./routes/authRoutes");
+const viewRouter = require("./routes/viewRoutes");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 
 const app = express();
 
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "views"));
+
 // 1 - MIDDLEWARE
+
+// serving static files
+app.use(express.static(path.join(__dirname, "public")));
 
 // set security http headers
 app.use(helmet());
@@ -65,9 +73,6 @@ app.use(
   }),
 );
 
-// serving static files
-app.use(express.static(`/${__dirname}/public`));
-
 // test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
@@ -75,6 +80,7 @@ app.use((req, res, next) => {
 });
 
 // 3 - ROUTES
+app.use("/", viewRouter);
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/auth", authRouter);
