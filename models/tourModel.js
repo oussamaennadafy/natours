@@ -55,7 +55,7 @@ const toursSchema = new mongoose.Schema(
         message: "price discount ({VALUE}) should be less than the trip price",
       },
     },
-    Summary: {
+    summary: {
       type: String,
       trim: true,
       unique: true,
@@ -98,9 +98,10 @@ const toursSchema = new mongoose.Schema(
         coordinates: [Number],
         address: String,
         description: String,
+        day: Number,
       },
     ],
-    guids: [
+    guides: [
       {
         type: "ObjectId",
         ref: "User",
@@ -153,7 +154,7 @@ toursSchema.pre(/^find/, function (next) {
 
 toursSchema.pre(/^find/, function (next) {
   this.populate({
-    path: "guids",
+    path: "guides",
     select: "-__v -passwordChangedAt",
   });
   next();

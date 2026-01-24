@@ -19,7 +19,7 @@ const reviewSchema = new mongoose.Schema(
       required: [true, "review must belong to a tour"],
     },
     user: {
-      type: mongoose.Schema.ObjectId,
+      type: "ObjectId",
       ref: "User",
       required: [true, "Review must belong to a user"],
     },
@@ -34,20 +34,20 @@ const reviewSchema = new mongoose.Schema(
   },
 );
 
-// reviewSchema.pre(/^find/, function (next) {
-// this.populate({
-//   path: "tour",
-//   select: "name",
-// }).populate({
-//   path: "user",
-//   select: "name photo",
-// });
-// this.populate({
-//   path: "user",
-//   select: "name photo",
-// });
-// next();
-// });
+reviewSchema.pre(/^find/, function (next) {
+  // this.populate({
+  //   path: "tour",
+  //   select: "name",
+  // }).populate({
+  //   path: "user",
+  //   select: "name photo",
+  // });
+  this.populate({
+    path: "user",
+    select: "name photo",
+  });
+  next();
+});
 
 reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
 
