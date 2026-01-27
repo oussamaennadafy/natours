@@ -37,7 +37,7 @@ const updateMe = catchAsync(async (req, res, next) => {
   });
 
   res.status(200).json({
-    sttaus: "success",
+    status: "success",
     user: updateUser,
   });
 });

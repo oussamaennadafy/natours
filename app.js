@@ -26,6 +26,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // cookie parser
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
 // set security http headers
 app.use(helmet());
