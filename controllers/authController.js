@@ -30,7 +30,7 @@ const createAndSendRoken = (user, statusCode, res) => {
   user.password = undefined;
 
   res.status(statusCode).json({
-    sttaus: "success",
+    status: "success",
     token,
     data: {
       user,
@@ -72,6 +72,16 @@ const login = catchAsync(async (req, res, next) => {
   createAndSendRoken(user, 200, res);
 });
 
+const logout = (req, res) => {
+  res.cookie("jwt", "", {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({
+    status: "success",
+  });
+};
+
 const protect = catchAsync(async (req, res, next) => {
   // 1 - get the token and check if it exist
   let token;
@@ -80,6 +90,8 @@ const protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ").at(1);
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
   if (!token) return next(new AppError("you are not logged in", 401));
   // 2 - verify the token
@@ -100,6 +112,32 @@ const protect = catchAsync(async (req, res, next) => {
   req.user = currentUser;
   next();
 });
+
+// only for render pages, no errors
+const isLogedIn = async (req, res, next) => {
+  try {
+    if (!req.cookies.jwt) return next();
+    // 2 - verify the token
+    const decoded = await promisify(jwt.verify)(
+      req.cookies.jwt,
+      process.env.JWT_SECRET,
+    );
+
+    // 3 -  if user is exist
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) return next();
+
+    // 4 - check if user changed password after token was issued
+    const isPasswordChanged = currentUser.changedPasswordAfter(decoded.iat);
+    if (isPasswordChanged) return next();
+
+    // there is a logged in user
+    res.locals.user = currentUser;
+    return next();
+  } catch (error) {
+    return next();
+  }
+};
 
 const restrictTo = (...roles) =>
   catchAsync(async (req, res, next) => {
@@ -200,4 +238,6 @@ module.exports = {
   forgotPassword,
   resetPassword,
   updatePassword,
+  isLogedIn,
+  logout,
 };

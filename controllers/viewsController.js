@@ -6,10 +6,16 @@ const getOverview = catchAsync(async (req, res, next) => {
   const tours = await Tour.find();
   // 2 - build template
   // 3 - render the template with the data on it
-  res.status(200).render("overview", {
-    title: "all tours",
-    tours,
-  });
+  res
+    .status(200)
+    .set(
+      "Content-Security-Policy",
+      "default-src 'self' https://*.jsdelivr.net ;base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src https://cdnjs.cloudflare.com https://cdn.jsdelivr.net 'self' blob: ;script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;",
+    )
+    .render("overview", {
+      title: "all tours",
+      tours,
+    });
 });
 
 const getTour = catchAsync(async (req, res, next) => {
@@ -32,7 +38,20 @@ const getTour = catchAsync(async (req, res, next) => {
     });
 });
 
+const getLoginForm = (req, res) => {
+  res
+    .status(200)
+    .set(
+      "Content-Security-Policy",
+      "default-src 'self' https://*.jsdelivr.net ;base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src https://cdnjs.cloudflare.com https://cdn.jsdelivr.net 'self' blob: ;script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;",
+    )
+    .render("login", {
+      title: "log into your account",
+    });
+};
+
 module.exports = {
   getOverview,
   getTour,
+  getLoginForm,
 };

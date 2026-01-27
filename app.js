@@ -6,6 +6,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
+const cookieParser = require("cookie-parser");
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
 const authRouter = require("./routes/authRoutes");
@@ -22,6 +23,9 @@ app.set("views", path.join(__dirname, "views"));
 
 // serving static files
 app.use(express.static(path.join(__dirname, "public")));
+
+// cookie parser
+app.use(cookieParser());
 
 // set security http headers
 app.use(helmet());
