@@ -6,6 +6,8 @@ const {
   deleteUser,
   getMe,
   getUser,
+  uploeadUserPhoto,
+  resizeUserPhoto,
 } = require("../controllers/userController");
 const { protect, restrictTo } = require("../controllers/authController");
 
@@ -15,7 +17,7 @@ const router = express.Router();
 router.use(protect);
 
 router.route("/me").get(getMe, getUser);
-router.route("/updateMe").patch(updateMe);
+router.route("/updateMe").patch(uploeadUserPhoto, resizeUserPhoto, updateMe);
 router.route("/deleteMe").delete(deleteMe);
 
 // protect for only admins
