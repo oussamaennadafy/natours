@@ -10,8 +10,8 @@
     "node": ">=11.14.0"
   },
   "scripts": {
-    "start": "set NODE_ENV=development && nodemon server.js",
-    "start:prod": "set NODE_ENV=production nodemon server.js",
+    "start": "NODE_ENV=development nodemon server.js",
+    "start:prod": "NODE_ENV=production nodemon server.js",
     "start:debug": "ndb server.js",
     "watch:js": "parcel watch ./public/js/index.js --dist-dir ./public/js",
     "build:js": "parcel watch ./public/js/index.js --dist-dir ./public/js"
@@ -41,6 +41,7 @@
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
     "hpp": "^0.2.3",
+    "html-to-text": "^9.0.5",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.20.1",
     "morgan": "^1.10.1",

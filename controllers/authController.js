@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
-const { sendEmail } = require("../utils/email");
+const { Email } = require("../utils/email");
+// const { sendEmail } = require("../utils/email");
 
 const signToken = (id) =>
   jwt.sign({ id: id }, process.env.JWT_SECRET, {
@@ -50,6 +51,10 @@ const signup = catchAsync(async (req, res, next) => {
     passwordConfirm,
     passwordChangedAt,
   });
+
+  const url = `${req.protocol}://${req.get("host")}/me`;
+
+  await new Email(newUser, url).sendWelcome();
 
   createAndSendRoken(newUser, 201, res);
 });
@@ -150,7 +155,7 @@ const restrictTo = (...roles) =>
     next();
   });
 
-const forgotPassword = catchAsync(async (req, res, next) => {
+const forgetPassword = catchAsync(async (req, res, next) => {
   // 1 get user based on received email
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
@@ -160,17 +165,11 @@ const forgotPassword = catchAsync(async (req, res, next) => {
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
 
-  // 3 send it back as an email
-  const resetURL = `${req.protocol}://${req.get("host")}/api/v1/auth/resetPassword/${resetToken}`;
-
-  const message = `Forget your password, to change your password click on the link : ${resetURL}`;
-
   try {
-    await sendEmail({
-      email: user.email,
-      subject: "your password reset token: (valide for 10min)",
-      message: message,
-    });
+    // 3 send it back as an email
+    const resetURL = `${req.protocol}://${req.get("host")}/api/v1/auth/resetPassword/${resetToken}`;
+    await new Email(user, resetURL).sendPasswordReset();
+
     res.status(200).json({
       status: "success",
       message: "token has been sent to email",
@@ -236,7 +235,7 @@ module.exports = {
   login,
   protect,
   restrictTo,
-  forgotPassword,
+  forgetPassword,
   resetPassword,
   updatePassword,
   isLogedIn,
