@@ -8,6 +8,8 @@ const saveSettingsBtn = document.querySelector(".save-settings-btn");
 
 const savePasswordBtn = document.querySelector(".save-password-btn");
 
+const bookBtn = document.getElementById("book-tour");
+
 if (formLogin) {
   formLogin.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -33,7 +35,6 @@ if (saveSettingsBtn) {
     form.append("email", document.getElementById("email").value);
     form.append("photo", document.getElementById("photo").files[0]);
     console.log(form);
-    
 
     updateSettings(form, "data");
   });
@@ -56,5 +57,13 @@ if (savePasswordBtn) {
     document.getElementById("password-current").value = "";
     document.getElementById("password").value = "";
     document.getElementById("password-confirm").value = "";
+  });
+}
+
+if (bookBtn) {
+  bookBtn.addEventListener("click", async (e) => {
+    e.target.textContent = "Processing...";
+    const { tourId } = e.target.dataset;
+    bookTour(tourId);
   });
 }

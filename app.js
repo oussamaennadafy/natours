@@ -9,6 +9,7 @@ const hpp = require("hpp");
 const cookieParser = require("cookie-parser");
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
+const bookingRouter = require("./routes/bookingRoutes");
 const authRouter = require("./routes/authRoutes");
 const viewRouter = require("./routes/viewRoutes");
 const AppError = require("./utils/appError");
@@ -89,6 +90,7 @@ app.use("/", viewRouter);
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/bookings", bookingRouter);
 
 // catch all unmatched requestes
 app.all("/*splat", (req, res, next) => {
