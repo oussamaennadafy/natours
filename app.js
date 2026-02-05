@@ -1,3 +1,4 @@
+// packages imports
 const express = require("express");
 const path = require("path");
 const morgan = require("morgan");
@@ -7,6 +8,8 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const cookieParser = require("cookie-parser");
+const compression = require("compression");
+// files imports
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
 const bookingRouter = require("./routes/bookingRoutes");
@@ -78,6 +81,9 @@ app.use(
     ],
   }),
 );
+
+// compression middleware
+app.use(compression());
 
 // test middleware
 app.use((req, res, next) => {

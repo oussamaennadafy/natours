@@ -8,14 +8,11 @@ const bookTour = async (tourId) => {
   try {
     // 1 - get checkoiut session from API
     const session = await axios(
-      `http://localhost:8000/api/v1/bookings/checkout-session/${tourId}`,
+      `/api/v1/bookings/checkout-session/${tourId}`,
     );
-    console.log(session);
-
     // 2 - create checkout form + charge the credit card
     window.location.href = session.data.session.url;
   } catch (error) {
-    console.log(error);
     showAlert();
   }
 };

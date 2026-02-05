@@ -4,8 +4,8 @@
 const updateSettings = async (data, type) => {
   const url =
     type === "password"
-      ? "http://localhost:8000/api/v1/auth/updatePassword"
-      : "http://localhost:8000/api/v1/users/updateMe";
+      ? "/api/v1/auth/updatePassword"
+      : "/api/v1/users/updateMe";
   try {
     const res = await axios({
       method: "PATCH",
