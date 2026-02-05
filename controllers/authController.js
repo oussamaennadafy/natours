@@ -12,7 +12,7 @@ const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-const createAndSendRoken = (user, statusCode, res) => {
+const createAndSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
 
   const cookieOptions = {
@@ -56,7 +56,7 @@ const signup = catchAsync(async (req, res, next) => {
 
   await new Email(newUser, url).sendWelcome();
 
-  createAndSendRoken(newUser, 201, res);
+  createAndSendToken(newUser, 201, res);
 });
 
 const login = catchAsync(async (req, res, next) => {
@@ -74,7 +74,7 @@ const login = catchAsync(async (req, res, next) => {
     return next(new AppError("Incorect email or password"), 401);
 
   // generate token
-  createAndSendRoken(user, 200, res);
+  createAndSendToken(user, 200, res);
 });
 
 const logout = (req, res) => {
@@ -206,7 +206,7 @@ const resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
   // 3 - update the changedPassworedAt property in the durrent user
   // 4 - send the JWT to the client
-  createAndSendRoken(user, 200, res);
+  createAndSendToken(user, 200, res);
 });
 
 const updatePassword = catchAsync(async (req, res, next) => {
@@ -227,7 +227,7 @@ const updatePassword = catchAsync(async (req, res, next) => {
   await currentUser.save();
 
   // 4 - log user in qnd send jwt
-  createAndSendRoken(currentUser, 200, res);
+  createAndSendToken(currentUser, 200, res);
 });
 
 module.exports = {
