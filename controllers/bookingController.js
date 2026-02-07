@@ -13,7 +13,7 @@ const getCheckoutSession = catchAsync(async (req, res, next) => {
     payment_method_types: ["card"],
     // success_url: `${req.protocol}://${req.get("host")}/?my-tour=${req.params.tourId}&user=${req.user.id}&price=${tour.price}`,
     success_url: `${req.protocol}://${req.get("host")}/my-tours`,
-    cancel_url: `${req.protocol}://${req.get("host")}/tour/${tour.slug}`,
+    cancel_url: `${req.protocol}://${req.get("host")}/tours/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourID,
     mode: "payment",
@@ -26,7 +26,9 @@ const getCheckoutSession = catchAsync(async (req, res, next) => {
           product_data: {
             name: `${tour.name} tour`,
             description: tour.summary,
-            images: [`https://natours.dev/img/tours/${tour.imageCover}`],
+            images: [
+              `${req.protocol}://${req.get("host")}/img/tours/${tour.imageCover}`,
+            ],
           },
         },
       },
@@ -67,21 +69,28 @@ const createBookingCheckout = async (session) => {
 
 const webhookCheckout = catchAsync((req, res, next) => {
   const signature = req.headers["stripe-signature"];
-  let event;
+  let event = req.body;
+  console.log({
+    "----------------process.env.STRIPE_WEBHOOK_SECRET------------":
+      process.env.STRIPE_WEBHOOK_SECRET,
+  });
   try {
     event = stripe.webhooks.constructEvent(
       req.body,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET,
     );
-  } catch (error) {
-    return res.status(400).send(`Webhook error: ${error.message}`);
+  } catch (err) {
+    console.log(`⚠️  Webhook signature verification failed.`, err.message);
+    return res.sendStatus(400);
   }
 
+  // create the booking if everything is okey
   if (event.type === "checkout.session.completed")
     createBookingCheckout(event.data.object);
 
-  res.status(200).json({ recieved: true });
+  // Return a 200 response to acknowledge receipt of the event
+  res.send();
 });
 
 const createBooking = factory.createOne(Booking);
