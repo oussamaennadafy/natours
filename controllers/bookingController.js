@@ -70,24 +70,22 @@ const createBookingCheckout = async (session) => {
 const webhookCheckout = catchAsync((req, res, next) => {
   const signature = req.headers["stripe-signature"];
   let event = req.body;
-  console.log({
-    "stripe.webhooks": stripe.webhooks,
-    "----------------signature------------": signature,
-    "----------------process.env.STRIPE_WEBHOOK_SECRET------------":
-      process.env.STRIPE_WEBHOOK_SECRET,
-  });
   try {
     event = stripe.webhooks.constructEvent(
       req.body,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET,
     );
+    console.log({ "------------------- event -------------------": event });
   } catch (err) {
     console.log(`⚠️  Webhook signature verification failed.`, err.message);
     return res.sendStatus(400);
   }
 
   // create the booking if everything is okey
+  console.log({
+    "------------------ event.type -------------------": event.type,
+  });
   if (event.type === "checkout.session.completed")
     createBookingCheckout(event.data.object);
 

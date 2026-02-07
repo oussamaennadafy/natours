@@ -22,7 +22,7 @@ const { webhookCheckout } = require("./controllers/bookingController");
 
 const app = express();
 
-app.enable("trust proxy");
+app.enable("trust proxy", 1);
 
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
@@ -54,7 +54,7 @@ const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
   message: "too many requests from this ip, please try again in an hour!",
-  trustProxy: false,
+  // trustProxy: false,
 });
 app.use("/api", limiter);
 
