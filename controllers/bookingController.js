@@ -60,6 +60,16 @@ const createBookingCheckout = async (session) => {
   const tour = session.client_reference_id;
   const user = (await User.findOne({ email: session.customer_email })).id;
   const price = session.line_items[0].price_data.unit_amount / 100;
+  console.log({
+    "-------------------------------------session-------------------------------------":
+      session,
+    "-------------------------------------tour-------------------------------------":
+      tour,
+    "-------------------------------------user-------------------------------------":
+      user,
+    "-------------------------------------price-------------------------------------":
+      price,
+  });
   await Booking.create({
     tour,
     user,
@@ -76,16 +86,12 @@ const webhookCheckout = (req, res, next) => {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET,
     );
-    console.log({ "------------------- event -------------------": event });
   } catch (err) {
     console.log(`⚠️  Webhook signature verification failed.`, err.message);
     return res.sendStatus(400);
   }
 
   // create the booking if everything is okey
-  console.log({
-    "------------------ event.type -------------------": event.type,
-  });
   if (event.type === "checkout.session.completed")
     createBookingCheckout(event.data.object);
 
