@@ -12,18 +12,16 @@ const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-const createAndSendToken = (user, statusCode, res) => {
+const createAndSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
 
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
     ),
-    secure: false,
+    secure: req.secure || req.headers("x-forwarded-proto") === "https",
     httpOnly: true,
   };
-
-  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
   res.cookie("jwt", token, cookieOptions);
 
@@ -56,7 +54,7 @@ const signup = catchAsync(async (req, res, next) => {
 
   await new Email(newUser, url).sendWelcome();
 
-  createAndSendToken(newUser, 201, res);
+  createAndSendToken(newUser, 201, req, res);
 });
 
 const login = catchAsync(async (req, res, next) => {
@@ -74,7 +72,7 @@ const login = catchAsync(async (req, res, next) => {
     return next(new AppError("Incorect email or password"), 401);
 
   // generate token
-  createAndSendToken(user, 200, res);
+  createAndSendToken(user, 200, req, res);
 });
 
 const logout = (req, res) => {
@@ -206,7 +204,7 @@ const resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
   // 3 - update the changedPassworedAt property in the durrent user
   // 4 - send the JWT to the client
-  createAndSendToken(user, 200, res);
+  createAndSendToken(user, 200, req, res);
 });
 
 const updatePassword = catchAsync(async (req, res, next) => {
@@ -227,7 +225,7 @@ const updatePassword = catchAsync(async (req, res, next) => {
   await currentUser.save();
 
   // 4 - log user in qnd send jwt
-  createAndSendToken(currentUser, 200, res);
+  createAndSendToken(currentUser, 200, req, res);
 });
 
 module.exports = {
