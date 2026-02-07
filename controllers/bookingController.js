@@ -67,7 +67,7 @@ const createBookingCheckout = async (session) => {
   });
 };
 
-const webhookCheckout = catchAsync((req, res, next) => {
+const webhookCheckout = (req, res, next) => {
   const signature = req.headers["stripe-signature"];
   let event = req.body;
   try {
@@ -91,7 +91,7 @@ const webhookCheckout = catchAsync((req, res, next) => {
 
   // Return a 200 response to acknowledge receipt of the event
   res.send();
-});
+};
 
 const createBooking = factory.createOne(Booking);
 const getAllBookings = factory.getAll(Booking);
