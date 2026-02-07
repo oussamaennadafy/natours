@@ -59,7 +59,7 @@ app.use("/api", limiter);
 
 // checkout session endpoint
 app.post(
-  "webhook-checkout",
+  "/webhook-checkout",
   express.raw({ type: "application/json" }),
   webhookCheckout,
 );
