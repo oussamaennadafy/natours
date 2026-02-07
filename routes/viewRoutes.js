@@ -6,10 +6,13 @@ const {
   getAccount,
   getMyTours,
   updateUserData,
+  alert,
 } = require("../controllers/viewsController");
 const { isLogedIn, protect } = require("../controllers/authController");
 
 const router = express.Router();
+
+router.use(alert);
 
 router.get("/", isLogedIn, getOverview);
 router.get("/tour/:slug", isLogedIn, getTour);

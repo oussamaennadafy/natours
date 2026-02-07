@@ -3,7 +3,7 @@ html
   head
     block head
       meta(charset='UTF-8')
-      script(src="/js/alert.js", defer)
+      script(src="/js/alert.js")
       meta(name='viewport' content='width=device-width, initial-scale=1.0')
       script(src='https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js')
       script(src="https://js.stripe.com/clover/stripe.js")
@@ -13,7 +13,7 @@ html
       link(rel='shortcut icon' type='image/png' href='/img/favicon.png')
       title Natours | #{title || 'Connect With Nature'}
 
-  body
+  body(data-alert=`${alert? alert : ""}`)
     // HEADER
     include _header
 

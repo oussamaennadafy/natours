@@ -102,6 +102,15 @@ const updateUserData = catchAsync(async (req, res, next) => {
     });
 });
 
+const alerts = (req, res, next) => {
+  const { alert } = req.query;
+  if (alert === "booking") {
+    res.locals.alert =
+      "Your booking was successful! please check your email for confirmation. if your booking does not show here immediatly, please try later.";
+  }
+  next();
+};
+
 module.exports = {
   getOverview,
   getTour,
@@ -109,4 +118,5 @@ module.exports = {
   getAccount,
   updateUserData,
   getMyTours,
+  alerts,
 };
