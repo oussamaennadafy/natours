@@ -1,11 +1,8 @@
 <p align="center">
-<<<<<<< HEAD
   <img src="public/img/logo-green-round.png" alt="Logo Natours" width="180">
 </p>
 
 <p align="center">
-=======
->>>>>>> 078f35190d70a186abc3903975c3f1609c98e1a2
   <img src="public/img/logo-green.png" alt="Natours" width="220">
 </p>
 
