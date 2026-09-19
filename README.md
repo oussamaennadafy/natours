@@ -1,8 +1,57 @@
-# Natours
+<p align="center">
+  <img src="public/img/logo-green-round.png" alt="Natours logo" width="180">
+</p>
 
-A nature-tour booking app: a REST API plus a server-rendered website. Users can browse tours, sign up and log in, update their profile, leave reviews, and pay for a tour with Stripe. Admins and lead guides manage tours and bookings.
+<p align="center">
+  <img src="public/img/logo-green.png" alt="Natours" width="220">
+</p>
 
-This project is a Node.js / Express / MongoDB application (inspired by the Jonas Schmedtmann Node.js course), maintained by [Oussama Ennadafy](https://github.com/oussamaennadafy).
+<h1 align="center">Connect With Nature</h1>
+
+<p align="center">
+  <strong>Exciting tours for adventurous people</strong>
+</p>
+
+<p align="center">
+  Discover wild places. Follow expert guides. Come home with stories — not souvenirs from a gift shop.
+</p>
+
+<p align="center">
+  <a href="#getting-started"><strong>Get started</strong></a>
+  ·
+  <a href="#website-routes">Website</a>
+  ·
+  <a href="#api-overview">API</a>
+</p>
+
+---
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <strong>Adventure, not a checklist</strong><br>
+      Multi-day tours with real locations on the map — from the first trailhead to the last camp.
+    </td>
+    <td align="center" width="33%">
+      <strong>People you can trust</strong><br>
+      Rated by travelers. Led by guides. Booked in minutes with a secure checkout.
+    </td>
+    <td align="center" width="33%">
+      <strong>Your trip, your account</strong><br>
+      Sign up, save your profile, review the places you loved, and reopen the tours you already booked.
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <em>What are you waiting for? One adventure. Infinite memories. Make it yours today.</em>
+</p>
+
+---
+
+**Natours** is a nature-tour booking product: a REST API plus a server-rendered website. Travelers browse tours, sign up, update their profile, leave reviews, and pay with Stripe. Admins and lead guides manage tours and bookings.
+
+Built with Node.js, Express, and MongoDB (inspired by the Jonas Schmedtmann Node.js course), maintained by [Oussama Ennadafy](https://github.com/oussamaennadafy).
 
 ## Features
 
