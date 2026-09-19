@@ -1,8 +1,4 @@
 <p align="center">
-  <img src="public/img/logo-green-round.png" alt="Natours logo" width="180">
-</p>
-
-<p align="center">
   <img src="public/img/logo-green.png" alt="Natours" width="220">
 </p>
 
